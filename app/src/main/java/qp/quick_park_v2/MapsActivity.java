@@ -3,7 +3,10 @@ package qp.quick_park_v2;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Address;
+import android.location.Criteria;
 import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,6 +31,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private final static int MY_PERMISSION_FINE_LACATION = 101;
     Button geoLocationBt; // search btn
+
+    // for on start location
+    private LocationManager lms;
+    private String bestProvider = LocationManager.GPS_PROVIDER;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +74,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        // move camera to current location on start
+        lms = (LocationManager) getSystemService(LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        bestProvider = lms.getBestProvider(criteria, true);
+        Location location = lms.getLastKnownLocation(bestProvider);
+        LatLng current_latlng = new LatLng(location.getLatitude(), location.getLongitude());
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(current_latlng, 15));
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
