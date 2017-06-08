@@ -21,7 +21,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.List;
@@ -35,6 +38,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // for on start location
     private LocationManager lms;
     private String bestProvider = LocationManager.GPS_PROVIDER;
+
+    // parking location marker
+    private static final LatLng parkPlace1 = new LatLng(24.80967, 120.97400);
+    private Marker mParkPlace1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +88,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         bestProvider = lms.getBestProvider(criteria, true);
         Location location = lms.getLastKnownLocation(bestProvider);
         LatLng current_latlng = new LatLng(location.getLatitude(), location.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(current_latlng, 15));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(current_latlng, 14));
+
+        // load parking place
+        addParkingPlace();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
@@ -90,6 +100,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_FINE_LACATION);
             }
         }
+    }
+
+    private void addParkingPlace() {
+        mParkPlace1 = mMap.addMarker(new MarkerOptions()
+                    .position(parkPlace1)
+                    .title("Parking slot 1")
+                    .snippet("price: $30/hr")
+                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_park_place))
+                    .infoWindowAnchor(0.5f, 0.5f));
     }
 
     // ask for location permission
