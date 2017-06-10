@@ -3,10 +3,7 @@ package qp.quick_park_v2;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Address;
-import android.location.Criteria;
 import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -35,9 +32,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private final static int MY_PERMISSION_FINE_LACATION = 101;
     Button geoLocationBt; // search btn
 
+    /*
     // for on start location
     private LocationManager lms;
     private String bestProvider = LocationManager.GPS_PROVIDER;
+    */
 
     // parking location marker
     private static final LatLng parkPlace1 = new LatLng(24.80967, 120.97400);
@@ -82,6 +81,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        /*
         // move camera to current location on start
         lms = (LocationManager) getSystemService(LOCATION_SERVICE);
         Criteria criteria = new Criteria();
@@ -89,8 +89,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Location location = lms.getLastKnownLocation(bestProvider);
         LatLng current_latlng = new LatLng(location.getLatitude(), location.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(current_latlng, 14));
+           */
 
-        // load parking place
+        // load parking place <-----------here ! need to load parking place from db
         addParkingPlace();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
